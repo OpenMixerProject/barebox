@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: GPL-2.0-only
+#
+# currently unused in barebox, but useful to generate
+# a imx-image to use with imx-usb-loader
+#
+soc imx25
+loadaddr 0x82000000
+
+# start of DCD
+ivtofs 0x400
+
+
+# Freescale/NXP i.MX253 Memory-initialization script for pyATK
+# v0.1 18.05.2025
+#
+# This Meminit-script is based on mDDR-init in NXP AN4017 Rev0, 03/2010
+#
+# in i.MX25 Doku AN4017 the HYB18M512160AF is used as mDDR
+# HYB18M512160AF is a type of LPDDR regarding to https://www.absunshine.com/en/parts/HYB18M512160AF-7-50-QIMONDA-3236083
+
+# general initialization
+# ==============================
+# enable mDDR mode (MDDR_EN = 1) in SDRAM control registers (0xB8001xxx) -> Offset 0x010 -> ESDMISC
+wm 32 0xB8001010 0x00000004
+# ESDRAMC timings (0b011110101110101100111010) in SDRAM control register (0xB8001xxx) -> Offset 0x004 -> ESDCFG0
+wm 32 0xB8001004 0x007AEB3A
+# DDR initialization
+# enable CS0 precharge command (0b10010010000100000000000000000000) in SDRAM control register (0xB8001xxx) -> Offset 0x000 -> ESDCTL0
+wm 32 0xB8001000 0x92216082
+
+# precharge all dummy write only address matter (0x80000000 is RAM)
+wm 32 0x80000400 0x12344321
+
+# enable CS0 Auto-Refresh command (0b10100010000100000000000000000000) in SDRAM control register (0xB8001xxx) -> Offset 0x000 -> ESDCTL0
+wm 32 0xB8001000 0xA2216082
+
+# two refresh command dummy write only address matter (0x80000000 is RAM)
+wm 32 0x80000000 0x12344321
+wm 32 0x80000000 0x12344321
+
+# enable CS0 Load Mode Register command (0b10110010000100000000000000000000) in SDRAM control register (0xB8001xxx) -> Offset 0x000 -> ESDCTL0
+wm 32 0xB8001000 0xB2216082
+# MODE register - CAS3, BL8
+
+# dummy write only address matter (0x80000000 is RAM)
+wm 8 0x80000033 0xda
+
+# Extended MODE register
+# dummy write only address matter (0x80000000 is RAM)
+wm 8 0x81000000 0xff
+
+# Configure EDSRAMC for normal mode in SDRAM control register (0xB8001xxx) -> Offset 0x000 -> ESDCTL0
+wm 32 0xB8001000 0x82216082
+

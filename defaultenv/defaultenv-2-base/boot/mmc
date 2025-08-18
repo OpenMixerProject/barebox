@@ -1,0 +1,6 @@
+#!/bin/sh
+
+global.bootm.image=/sd/zImage
+global.bootm.oftree=/sd/imx25-openx32.dtb
+#global.bootm.initrd=/sd/uramdisk.bin
+global linux.bootargs.base="console=ttymxc4,115200 console=tty0 root=/dev/mmcblk0p3 rw video=imxfb:800x480"

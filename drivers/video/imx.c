@@ -581,8 +581,6 @@ static int imxfb_probe(struct device *dev)
 	info->bits_per_pixel = pdata->bpp;
 	info->fbops = &imxfb_ops;
 
-	dev_info(dev, "i.MX Framebuffer driver\n");
-
 
 	ret = imxfb_allocate_fbbuffer(dev, info, pdata->framebuffer);
 	if (ret < 0)
