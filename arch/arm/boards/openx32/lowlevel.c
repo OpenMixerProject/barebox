@@ -35,9 +35,6 @@ static inline void setup_uart(void)
 ENTRY_FUNCTION_WITHSTACK(start_imx25_openx32, MX25_IRAM_BASE_ADDR + MX25_IRAM_SIZE, r0, r1, r2)
 {
 	arm_cpu_lowlevel_init();
-	
-	// Disable ESDCTL1 - not connected SDRAM controller
-	writel(0x0, 0xB8001008);
 
 	setup_uart();
 
