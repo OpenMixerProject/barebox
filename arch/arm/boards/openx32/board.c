@@ -22,11 +22,57 @@
 #include <mach/imx/bbu.h>
 #include <asm/mmu.h>
 
+#define FEC_RESET_B		IMX_GPIO_NR(1, 1)
+#define LAMP_PWM		IMX_GPIO_NR(1, 26)
+#define USB_POWER		IMX_GPIO_NR(4, 11)
+#define MCU_BUSY		IMX_GPIO_NR(4, 24)
+#define SURFACE_RESET		IMX_GPIO_NR(4, 28)
+
 static int openx32_init(void)
 {
 	barebox_set_hostname("openx32");
 	armlinux_set_architecture(MACH_TYPE_OPENX32);
 	armlinux_set_serial(imx_uid());
+
+	// set GPIOs within IOMUXC
+	static const iomux_v3_cfg_t gpio_pads[] = {
+		NEW_PAD_CTRL(MX25_PAD_CONTRAST__PWM4_PWMO, 0),
+		NEW_PAD_CTRL(MX25_PAD_PWM__GPIO_1_26, 0),
+		NEW_PAD_CTRL(MX25_PAD_D9__GPIO_4_11, 0),
+		NEW_PAD_CTRL(MX25_PAD_UART1_RTS__GPIO_4_24, 0),
+		NEW_PAD_CTRL(MX25_PAD_UART2_RTS__GPIO_4_28, 0)
+	};
+	mxc_iomux_v3_setup_multiple_pads(gpio_pads, ARRAY_SIZE(gpio_pads));
+	
+
+	// enable LAMP (asserted when high)
+	gpio_request(LAMP_PWM, "LAMP_PWM");
+	gpio_direction_output(LAMP_PWM, 1);
+	gpio_set_value(LAMP_PWM, 1);
+
+	// enable USB_POWER (asserted when high)
+	gpio_request(USB_POWER, "USB_POWER");
+	gpio_direction_output(USB_POWER, 1);
+	gpio_set_value(USB_POWER, 1);
+
+	// enable MCU_BUSY LED (asserted when high)
+	gpio_request(MCU_BUSY, "MCU_BUSY");
+	gpio_direction_output(MCU_BUSY, 1);
+	gpio_set_value(MCU_BUSY, 1);
+
+	// enable SURFACE_RESET pin (asserted when zero)
+	gpio_request(SURFACE_RESET, "SURFACE_RESET");
+	gpio_direction_output(SURFACE_RESET, 1);
+	gpio_set_value(SURFACE_RESET, 1);
+
+	// // enable display-backlight
+	// // set periode (PWM_PWMPR) and dutycycle (PWM_PWMSAR)
+	// writel(0x00000190, 0x53FC8010);
+	// writel(0x000000C8, 0x53FC800C);
+	// // LCD on
+	// writel(0x000100A1, 0x53FC8000);
+
+
 
 	return 0;
 }
@@ -102,17 +148,7 @@ static int openx32_init_fb(void)
 	if (!IS_ENABLED(CONFIG_DRIVER_VIDEO_IMX)){
 		return 0;
 	}
-
-    // set GPIOs within IOMUXC
-	static const iomux_v3_cfg_t gpio_pads[] = {
-		NEW_PAD_CTRL(MX25_PAD_CONTRAST__PWM4_PWMO, 0),
-		NEW_PAD_CTRL(MX25_PAD_PWM__GPIO_1_26, 0),
-		NEW_PAD_CTRL(MX25_PAD_D9__GPIO_4_11, 0),
-		NEW_PAD_CTRL(MX25_PAD_UART1_RTS__GPIO_4_24, 0),
-		NEW_PAD_CTRL(MX25_PAD_UART2_RTS__GPIO_4_28, 0),
-	};
-	mxc_iomux_v3_setup_multiple_pads(gpio_pads, ARRAY_SIZE(gpio_pads));
-
+   
 	// enable display-backlight
 	// set periode (PWM_PWMPR) and dutycycle (PWM_PWMSAR)
 	writel(0x00000190, 0x53FC8010);
