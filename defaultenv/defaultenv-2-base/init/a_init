@@ -4,7 +4,7 @@
 #fbconsole0.active=0
 
 # feed Watchdog
-wdog0.autoping=1
+#wdog0.autoping=1
 
 mkdir -p /sd
 mount /dev/mmc0.1 /sd
@@ -17,5 +17,3 @@ mount /dev/mmc0.1 /sd
 
 # wait for signals to become stable
 #msleep 100
-
-boot mmc
