@@ -4,5 +4,5 @@ global.bootm.image=/sd/zImage
 global.bootm.oftree=/sd/imx25-openx32.dtb
 #global.bootm.initrd=/sd/uramdisk.bin
 #global linux.bootargs.base="console=ttymxc0,115200 console=ttymxc4,115200 root=/dev/mmcblk0p3 rw quiet video=imxfb:800x480"
-global linux.bootargs.base="console=ttymxc4,115200 root=/dev/mmcblk0p3 rw quiet video=imxfb:800x480"
+global linux.bootargs.base="console=ttymxc4,115200 root=/dev/mmcblk0p3 rw quiet video=imxfb:800x480 vt.global_cursor_default=0"
 
