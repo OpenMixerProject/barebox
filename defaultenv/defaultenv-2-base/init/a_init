@@ -4,4 +4,4 @@ mkdir -p /sd
 mount /dev/mmc0.1 /sd
 
 # use this as long autoboot doesn't work
-boot mmc
+boot mmc2
