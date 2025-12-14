@@ -72,6 +72,10 @@ static int openx32_init(void)
 	// // LCD on
 	// writel(0x000100A1, 0x53FC8000);
 
+	
+	// IOMUXC_SW_PAD_CTL_GRP_DSE_CSPI1 = 0x02 -> Drive Strength = High
+	writel(0x02, 0x43FAC450);
+
 
 
 	return 0;
