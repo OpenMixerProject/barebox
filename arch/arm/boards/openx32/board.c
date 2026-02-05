@@ -10,6 +10,9 @@
 #include <asm/mach-types.h>
 #include <mach/imx/generic.h>
 #include <mach/imx/esdctl.h>
+#include <gpio.h>
+
+#define USB_POWER		IMX_GPIO_NR(4, 11)
 
 static int openx32_ram_fixup(void) {
 	imx_esdctl_disable();
@@ -25,6 +28,11 @@ static int openx32_init(void) {
 
 	// IOMUXC_SW_PAD_CTL_GRP_DSE_CSPI1 = 0x02 -> Drive Strength = High
 	writel(0x02, 0x43FAC450);
+
+	// enable USB_POWER (asserted when high)
+	gpio_request(USB_POWER, "USB_POWER");
+	gpio_direction_output(USB_POWER, 1);
+	gpio_set_value(USB_POWER, 1);
 
 	return 0;
 }
